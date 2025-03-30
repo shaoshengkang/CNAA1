@@ -177,7 +177,7 @@ while True:
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
-      clientSocket.sendall(originServerR) # make data transfer to the connection aim server
+      clientSocket.sendall(originServerR) # make data transfer to the connection aim server and send all information
       # ~~~~ END CODE INSERT ~~~~
 
       # Create a new file in the cache for the requested file.
@@ -189,6 +189,7 @@ while True:
 
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
+      cacheFile.write(originServerR) # write the orgin server response data write in the aim cache file
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
       print ('cache file closed')

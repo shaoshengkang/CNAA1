@@ -7,7 +7,6 @@ import re
 
 # 1MB buffer size
 BUFFER_SIZE = 1000000
-#111
 
 # Get the IP address and Port number to use for this web proxy server
 parser = argparse.ArgumentParser()
@@ -21,7 +20,7 @@ proxyPort = int(args.port)
 try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
-  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is creat a server of IPv4 and support TCP connect 
+  socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is creat a server of IPv4 and support TCP connect 
   # ~~~~ END CODE INSERT ~~~~
   print ('Created socket')
 except:
@@ -31,7 +30,7 @@ except:
 try:
   # Bind the the server socket to a host and port
   # ~~~~ INSERT CODE ~~~~
-  serverSocket.bind((proxyHost, proxyPort)) #This step aim is for make the server port already and waiting for client connection request
+  socketServer.bind((proxyHost, proxyPort)) #This step aim is for make the server port already and waiting for client connection request
   # ~~~~ END CODE INSERT ~~~~
   print ('Port is bound')
 except:
@@ -41,7 +40,7 @@ except:
 try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
-  serverSocket.listen(4) #
+  socketServer.listen(6) #Make the server to start listening for connection requets from clients and the maximum quene
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
 except:
@@ -56,6 +55,7 @@ while True:
   # Accept connection from client and store in the clientSocket
   try:
     # ~~~~ INSERT CODE ~~~~
+    clientSocket, clientAddress = socketServer.accept() # The aim of this code is accpet the client connection request
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
   except:

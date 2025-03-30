@@ -130,6 +130,7 @@ while True:
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is creat a server of IPv4 and support TCP connect
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -138,6 +139,7 @@ while True:
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
       # ~~~~ INSERT CODE ~~~~
+      originServerSocket.connect((address,80)) # This code line is use to connect to the aim server,address,80 is point to the aim server.
       # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
@@ -148,6 +150,8 @@ while True:
       # originServerRequest is the first line in the request and
       # originServerRequestHeader is the second line in the request
       # ~~~~ INSERT CODE ~~~~
+      originServerRequest = f"GET {resource} HTTP/1.1" #Use HTTP1.1 Get to make request and point to the resource and use HTTP1.1 protoal 
+      originServerRequestHeader = f"Host: {hostname}" #Make a header of the host, use to tell the server the host name of the web
       # ~~~~ END CODE INSERT ~~~~
 
       # Construct the request to send to the origin server
@@ -168,10 +172,12 @@ while True:
 
       # Get the response from the origin server
       # ~~~~ INSERT CODE ~~~~
+      originServerR = clientSocket.recv(BUFFER_SIZE) #Aim is make already connect client get the data, and use BUFFER_SIZE to limit the data.
       # ~~~~ END CODE INSERT ~~~~
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
+      clientSocket.sendall(originServerR) # make data transfer to the connection aim server
       # ~~~~ END CODE INSERT ~~~~
 
       # Create a new file in the cache for the requested file.

@@ -65,6 +65,7 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
+  message_bytes = socketServer.recv(BUFFER_SIZE)  #Accept the data from the client and read the most BUFFER_SIZE byte data
   # ~~~~ END CODE INSERT ~~~~
   message = message_bytes.decode('utf-8')
   print ('Received request:')
@@ -117,6 +118,8 @@ while True:
     # ProxyServer finds a cache hit
     # Send back response to client 
     # ~~~~ INSERT CODE ~~~~
+    for lineofdata in cacheData:             #use for loop run the cacheData every line data, every line will give variable of the line of data
+      clientSocket.send(lineofdata.encode())  #Through the clientSocket make the convert data send to the client
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')

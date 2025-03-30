@@ -20,7 +20,7 @@ proxyPort = int(args.port)
 try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
-  socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is creat a server of IPv4 and support TCP connect 
+  socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is create a server of IPv4 and support TCP connect 
   # ~~~~ END CODE INSERT ~~~~
   print ('Created socket')
 except:
@@ -30,7 +30,7 @@ except:
 try:
   # Bind the the server socket to a host and port
   # ~~~~ INSERT CODE ~~~~
-  socketServer.bind((proxyHost, proxyPort)) #This step aim is for make the server port already and waiting for client connection request
+  socketServer.bind((proxyHost, proxyPort)) # This step is to make the server port available and wait for client connection request
   # ~~~~ END CODE INSERT ~~~~
   print ('Port is bound')
 except:
@@ -40,7 +40,7 @@ except:
 try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
-  socketServer.listen(6) #Make the server to start listening for connection requets from clients and the maximum quene
+  socketServer.listen(6) # Make the server start listening for connection requests from clients with a maximum queue
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
 except:
@@ -55,7 +55,7 @@ while True:
   # Accept connection from client and store in the clientSocket
   try:
     # ~~~~ INSERT CODE ~~~~
-    clientSocket, clientAddress = socketServer.accept() # The aim of this code is accpet the client connection request
+    clientSocket, clientAddress = socketServer.accept() # Accept the client connection request
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
   except:
@@ -65,7 +65,7 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
-  message_bytes = socketServer.recv(BUFFER_SIZE)  #Accept the data from the client and read the most BUFFER_SIZE byte data
+  message_bytes = socketServer.recv(BUFFER_SIZE)  # Accept the data from the client and read the most BUFFER_SIZE byte data
   # ~~~~ END CODE INSERT ~~~~
   message = message_bytes.decode('utf-8')
   print ('Received request:')
@@ -110,7 +110,7 @@ while True:
 
     fileExists = os.path.isfile(cacheLocation)
     
-    # Check wether the file is currently in the cache
+    # Check whether the file is currently in the cache
     cacheFile = open(cacheLocation, "r")
     cacheData = cacheFile.readlines()
 
@@ -118,19 +118,19 @@ while True:
     # ProxyServer finds a cache hit
     # Send back response to client 
     # ~~~~ INSERT CODE ~~~~
-    for lineofdata in cacheData:             #use for loop run the cacheData every line data, every line will give variable of the line of data
-      clientSocket.send(lineofdata.encode())  #Through the clientSocket make the convert data send to the client
+    for lineofdata in cacheData:             # Use for loop to iterate over the cacheData, every line will be sent to the client
+      clientSocket.send(lineofdata.encode())  # Send the data to the client through clientSocket
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
     print ('> ' + cacheData)
   except:
-    # cache miss.  Get resource from origin server
+    # cache miss. Get resource from origin server
     originServerSocket = None
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
-    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is creat a server of IPv4 and support TCP connect
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # The aim is to create a server of IPv4 and support TCP connect
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -139,7 +139,7 @@ while True:
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
       # ~~~~ INSERT CODE ~~~~
-      originServerSocket.connect((address,80)) # This code line is use to connect to the aim server,address,80 is point to the aim server.
+      originServerSocket.connect((address,80)) # This code line is used to connect to the destination server
       # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
@@ -150,8 +150,8 @@ while True:
       # originServerRequest is the first line in the request and
       # originServerRequestHeader is the second line in the request
       # ~~~~ INSERT CODE ~~~~
-      originServerRequest = f"GET {resource} HTTP/1.1" #Use HTTP1.1 Get to make request and point to the resource and use HTTP1.1 protoal 
-      originServerRequestHeader = f"Host: {hostname}" #Make a header of the host, use to tell the server the host name of the web
+      originServerRequest = f"GET {resource} HTTP/1.1" # Use HTTP 1.1 GET to make the request and point to the resource
+      originServerRequestHeader = f"Host: {hostname}" # Make a header of the host, used to tell the server the host name of the web
       # ~~~~ END CODE INSERT ~~~~
 
       # Construct the request to send to the origin server
@@ -172,12 +172,16 @@ while True:
 
       # Get the response from the origin server
       # ~~~~ INSERT CODE ~~~~
-      originServerR = clientSocket.recv(BUFFER_SIZE) #Aim is make already connect client get the data, and use BUFFER_SIZE to limit the data.
+      originServerR = originServerSocket.recv(BUFFER_SIZE)  # Aim is to get the data from the origin server and limit the data with BUFFER_SIZE
       # ~~~~ END CODE INSERT ~~~~
+
+      # Add Content-Type header to the response
+      response_header = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n"  # Setting Content-Type to text/html
+      full_response = response_header.encode() + b'\r\n' + originServerR  # Merge header and body
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
-      clientSocket.sendall(originServerR) # make data transfer to the connection aim server and send all information
+      clientSocket.sendall(full_response) # Send data to the client through the connection
       # ~~~~ END CODE INSERT ~~~~
 
       # Create a new file in the cache for the requested file.
@@ -189,7 +193,7 @@ while True:
 
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
-      cacheFile.write(originServerR) # write the orgin server response data write in the aim cache file
+      cacheFile.write(originServerR) # Write the origin server response data to the cache file
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
       print ('cache file closed')
